@@ -1,0 +1,2 @@
+-- Structures enable multiple independent pieces of data to be combined into a
+-- coherent whole that is represented by a brand new type fr
