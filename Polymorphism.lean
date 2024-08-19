@@ -94,4 +94,22 @@ inductive ArithExpr (ann: Type):Type where
 | minus : ann → ArithExpr ann → ArithExpr ann → ArithExpr ann
 | times : ann → ArithExpr ann → ArithExpr ann → ArithExpr ann
 -- every functions in lean requires arguments, so if you want to define a function with no arguements you can use unit as an argument
--- the unit type is very similar to the void type in c class of programming languages
+-- the unit type is very similar to the void type in c class of programming language    s
+-- Empty datatype
+-- Empty data type has no constructors whatsoever.
+-- Thus, it indicates unreachable code
+--  it is not used as often as Unit but it isuseful in some specialized contexts many polymorphic datatypes do not use all of their type arguments in all of their constructors.
+--  Naming : Sus, Products and Units
+--  Types that offer multiple constructors are called sum types,
+--  Types whose single constructor takes multiple arguments are calld product types.
+--  Not all definable structures or inductive types can have the type `Type`
+inductive MyType : Type where
+          | ctor : (α : Type) → α → MyType
+-- Exercises:
+-- Write a function to find the last entry in a list It should return Option
+def lastOfList? {α: Type} (xs: List α) : Option α :=
+    match xs with
+    | [] => none
+    | y :: [] => some y
+    | y :: ys => lastOfList? ys
+#eval lastOfList? animals
