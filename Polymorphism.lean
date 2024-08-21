@@ -113,3 +113,57 @@ def lastOfList? {α: Type} (xs: List α) : Option α :=
     | y :: [] => some y
     | y :: ys => lastOfList? ys
 #eval lastOfList? animals
+-- Write a function that finds the first entry in a list that satisfies a given predicate
+def List.findFirst? {α : Type} (xs : List α)
+(predicate : α → Bool) : Option α :=
+           match xs with
+           | [] => none
+           | y :: ys => match (predicate y) with
+                       | true => some y
+                       | false => List.findFirst? ys predicate
+
+-- Write a function Prod.swap that swaps the fields in a pair
+def Prod.swap {α β : Type} (pair : α × β ) : β × α := (pair.snd,pair.fst)
+-- Rewrite the PetName example to use a custom datatype and compare it to the version that uses Sum
+--
+-- Write a function zip that combines two lists into a list of pairs. The resulting list should be as long
+-- as the shortest input list
+-- Start the definition with d
+def zip {α β : Type} (xs: List α) (ys : List β)  : List (α × β) :=
+    match xs with
+    | [] => []
+    | x :: xxs => match ys with
+                  | [] => []
+                  | y::yys => List.cons (x,y) (zip xxs yys)
+
+#eval zip animals animals
+-- define a polymorphic function take that returns the first n entries in a list where n is Nat
+def take {α : Type} (n : Nat) (xs : List α) : List α :=
+    match n with
+    | 0 => []
+    | Nat.succ n => match xs with
+                    | [] => []
+                    | y::ys => List.cons y (take n ys)
+#eval take 6 animals
+
+-- Using the anlogy between types and arithmatic, write a function that distributes producs over
+-- sums. In other words, it should have type `α × (β⊕γ) → (α × β) ⊕ (α × γ)`
+
+def distributive {α β γ : Type} (v:(α × (β ⊕ γ))) :  ((α × β) ⊕ (α × γ))  :=
+    match v.snd with
+       | Sum.inl b => Sum.inl ( v.fst,  b)
+       | Sum.inr g => Sum.inr (v.fst , g)
+
+def distribute_product_over_sum {α β γ : Type} (a : α ×( β ⊕ γ)) : (α × β) ⊕ (α × γ) :=
+  match a.snd with
+  | Sum.inl b' => Sum.inl (a.fst, b')
+  | Sum.inr c' => Sum.inr (a.fst, c')
+-- Using the analogy between type and arithmatic, write a function that turns multiplication
+-- by two into a sum
+def mul_to_sum {α : Type} ( a: Bool × α ) : (α ⊕ α) :=
+    match a.fst with
+    | true => Sum.inl a.snd
+    | false => Sum.inr a.snd
+-- solving the same using if then else construct :P
+def double_as_sum {α : Type} (a : Bool× α) : α ⊕ α :=
+  if a.fst then Sum.inr a.snd else Sum.inl a.snd
